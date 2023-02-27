@@ -1,0 +1,6 @@
+*.c
+*.so
+dist
+build
+temp
+*.egg-info
