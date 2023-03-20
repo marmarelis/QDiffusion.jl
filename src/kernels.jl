@@ -53,22 +53,11 @@ struct DeformedKernel{T<:Real} <: Kernel{T}
   norm_power::T # defaults to 2.0 for the (deformed) Euclidean norm. could differ from the decay_power
 end
 
-function scale_kernel(deformation::T, data::AbstractMatrix{T})::Vector{T} where T <: Real
-  centroid = mapslices(NaNMath.mean, data, dims=2) # make sure I don't silently & innocuously override Statistics.mean
-  power = 3-deformation
-  scale = mapslices(NaNMath.mean, abs.(data .- centroid).^power, dims=2) .^ (1/power)
-  return scale[:, 1]
-end
-
-# OLD: include a factor of 2 (as in 2sigma^2) or (3-q) under the terms that are q-summed!
-# we need to arrive at a more methodical approach to scaling those internals.
-
 function DeformedKernel(
-    deformation::T, data::AbstractMatrix{T}, scale::Bool;
+    deformation::T, data::AbstractMatrix{T};
     inner_bandwidth::T = T(1), norm_power::T = T(2), decay_power::T = norm_power,
     do_deform_norm::Bool = true) where T <: Real
-  scales = scale ?
-    scale_kernel(deformation, data) : ones(T, size(data, 1))
+  scales = ones(T, size(data, 1))
   DeformedKernel(deformation, scales,
     inner_bandwidth, decay_power, do_deform_norm, norm_power)
 end
@@ -197,12 +186,9 @@ struct GaussianKernel{T<:Real} <: Kernel{T}
   norm_power::T
 end
 
-scale_kernel(data::AbstractMatrix{T}) where T <: Real =
-  scale_kernel(T(1), data) # as opposed to one(T)
-
-function GaussianKernel(data::AbstractMatrix{T}, scale::Bool;
+function GaussianKernel(data::AbstractMatrix{T};
     norm_power::T = T(2), decay_power::T = norm_power) where T <: Real
-  scales = scale ? scale_kernel(data) : ones(T, size(data, 1))
+  scales = ones(T, size(data, 1))
   #data |> scale_kernel |> GaussianKernel
   GaussianKernel(scales, decay_power, norm_power)
 end
@@ -246,14 +232,14 @@ function get_distance_squared(
 end
 
 function PossiblyDeformedKernel(
-    deformation::T, data::AbstractMatrix{T}, scale::Bool;
+    deformation::T, data::AbstractMatrix{T};
     norm_power::T = T(2), decay_power::T = norm_power, inner_bandwidth::T = T(1),
     do_deform_norm::Bool = true, epsilon=1e-5) where T <: Real
   #@assert !any(data .|> isnan) # for the future, consider simply dismissing NaN entries as zeros in the q-sum
   if abs(deformation - 1) < epsilon
-    GaussianKernel(data, scale; norm_power, decay_power)
+    GaussianKernel(data; norm_power, decay_power)
   else
-    DeformedKernel(deformation, data, scale;
+    DeformedKernel(deformation, data;
       inner_bandwidth, norm_power, decay_power, do_deform_norm)
   end
 end
