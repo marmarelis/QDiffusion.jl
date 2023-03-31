@@ -41,16 +41,26 @@ If you wish to use one or more CUDA-enabled GPUs, the array you pass in should e
 
 ```julia
 # bandwidth is normally set to 1.0 when using an adaptive kernel
-factors = par_estimate_nmf(kernel, bandwidth, data,
+factors = par_estimate_nmf(kernel, data, bandwidth,
   rank=16, # number of gene expression programs (GEPs)
   regularizations=[0f0, 1f0], # how much to regularize by kernel
-  # ^ many entries makes it re-estimate many times
+  # ^ multiple entries makes it re-estimate multiple times
   n_iterations=512,
   cuda_devices=[0],
   seed=1337) # random seed
 ```
 
+### $q$-Diffused [PHATE](https://www.nature.com/articles/s41587-019-0336-3)
 
+```julia
+embedding = leave_it_to_phate(kernel, data, bandwidth,
+  n_landmarks=-1, # a positive integer invokes the landmark approx
+  n_bases=100, # how many eigenvectors / basis vectors to compute
+  n_manifold_dims=2, # embedding dimensionality
+  tree_leaf_size=0, # this and the below are for CPU mode,
+  n_kernel_neighbors=0, # if you want to use a spatial tree structure
+  cuda_devices=[0])
+```
 
 
 ### Comprehensive documentation to come shortly!
