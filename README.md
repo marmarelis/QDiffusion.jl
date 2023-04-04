@@ -63,4 +63,18 @@ embedding = leave_it_to_phate(kernel, data, bandwidth,
 ```
 
 
+### Local Distributional Segmentation (LDS)
+A novel method for segmentation of spatial transcriptomics from modalities like MERFISH.
+Here, you need to supply another spatial `coordinates` matrix that is `(dims x cells)`.
+```julia
+spatial = par_spatially_cluster_mmd(bandwidth, coordinates, data;
+    n_pixels=64, # partition to 64 "pixels" and then classify
+    method=VoronoiGrid(1000), # 1k attempts to find an even partitioning
+    make_psd=false, # don't force kernel-induced matrix to be p.s.d
+    cuda_devices=[0]) do points
+  # ... build kernel for the sample in the `points` matrix
+end
+```
+
+
 ### Comprehensive documentation to come shortly!

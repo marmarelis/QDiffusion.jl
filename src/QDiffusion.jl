@@ -12,7 +12,7 @@
 ##  See the License for the specific language governing permissions and
 ##  limitations under the License.
 
-module IntrinsicGeometry
+module QDiffusion
 
 include("kernels.jl")
 include("explicit-diffusion.jl")
@@ -53,7 +53,8 @@ export smooth_local_dimensionality, compare_transport_paths, tune_and_score_svm_
 export init_tsne, embed_tsne, score_tsne_clusters
 
 export estimate_ksd_statistic, estimate_mmd_statistic, par_estimate_mmd, par_estimate_independence_mmd,
-  par_cluster_mmd, par_spatially_cluster_mmd, find_communities, construct_knn, construct_weighted_knn, construct_shared_nn
+  par_cluster_mmd, par_spatially_cluster_mmd, VoronoiGrid, HierarchicalGrid, find_communities,
+  construct_knn, construct_weighted_knn, construct_shared_nn
 
 export estimate_nmf, par_estimate_nmf, regress_linear, par_regress_linear
 

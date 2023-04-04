@@ -1,8 +1,8 @@
 push!(LOAD_PATH, "../src/")
 
-using IntrinsicGeometry
+using QDiffusion
 using Documenter
 
-makedocs(sitename="Documentation · IntrinsicGeometry.jl")
+makedocs(sitename="Documentation · QDiffusion.jl")
 
-deploydocs(repo="github.com/marmarelis/IntrinsicGeometry.jl.git") # pushed to the special gh-pages branch to be hosted on github.io
+deploydocs(repo="github.com/marmarelis/QDiffusion.jl.git") # pushed to the special gh-pages branch to be hosted on github.io

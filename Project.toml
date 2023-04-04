@@ -1,4 +1,4 @@
-name = "IntrinsicGeometry"
+name = "QDiffusion"
 uuid = "2ea45193-8e6e-4cf0-8c4b-25896a4f6964"
 authors = ["Myrl <myrl@marmarel.is>"]
 version = "0.1.0"
